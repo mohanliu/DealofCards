@@ -236,5 +236,6 @@ int * DeckOfCards::fivehand(int s, int f)
 
 void compare_2()
 {
+    //Work on two five hand
 }
 
