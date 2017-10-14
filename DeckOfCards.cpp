@@ -234,11 +234,7 @@ int * DeckOfCards::fivehand(int s, int f)
 }
 
 
-<<<<<<< HEAD
 void compare_2()
 {
 }
-=======
-void compare_2
->>>>>>> ebb847f22534511f9cfe7d117e146f68c0a50fed
 
