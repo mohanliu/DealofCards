@@ -1,6 +1,6 @@
 CC=g++
-CFLAGS=-c -Wall
-LDFLAGS=-lc++
+CFLAGS=-c -Wall -std=c++11
+LDFLAGS=
 SOURCES=main.cpp DeckOfCards.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=output
