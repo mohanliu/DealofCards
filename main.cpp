@@ -14,8 +14,43 @@ using std::srand;
 #include <ctime> // prototype for time
 using std::time;
 
+#include<vector>
+using std::vector;
+
+void analyse_results(int n) //check results for a large number of five-hands
+{
+    int count[9] = {0};
+
+	for (int t = 0 ;t < n ; t++)
+    {
+        DeckOfCards deckOfCards; // create DeckOfCards object
+        deckOfCards.shuffle(); // shuffle the cards in the deck
+        vector<int> p = deckOfCards.fivehand(1, 5);
+        count[p[0]]++;
+        if ( p[0] > 7)
+            deckOfCards.deal(5);
+    }
+
+    for ( int c = 8; c >=0; c--)
+    {
+        cout << "LEVEL " << setw(7) << c << setw(10) << count[c] << endl;
+    }
+}
+
+void compare_two_hands()
+{
+	DeckOfCards deckOfCards; // create DeckOfCards object
+    deckOfCards.shuffle(); // shuffle the cards in the deck
+    deckOfCards.deal(10);
+    vector<int> p1 = deckOfCards.fivehand(1, 5);
+    vector<int> p2 = deckOfCards.fivehand(6, 10);
+    int r = deckOfCards.compare_two_fivehand(p1, p2);
+}
+
 int main()
 {
+		srand(time(0));
+
     //deckOfCards.deal(); // deal the cards in the deck
 
 //    DeckOfCards deckOfCards; // create DeckOfCards object
@@ -33,23 +68,9 @@ int main()
 //    for ( int i = 0; i < 6; i++)
 //        cout << setw(5) << q[i] ;
 //    cout << endl;
-    
-    
-    srand(time(0));
-    int count[9] = {0};
-    for (int t=0 ;t <100000 ; t++)
-    {
-        DeckOfCards deckOfCards; // create DeckOfCards object
-        deckOfCards.shuffle(); // shuffle the cards in the deck
-        int * p = deckOfCards.fivehand(1, 5);
-        count[*p]++;
-        if ( p[0] > 7)
-            deckOfCards.deal(5);
-    }
-    for ( int c = 8; c >=0; c--)
-    {
-        cout << "LEVEL " << setw(7) << c << setw(10) << count[c] << endl;
-    }
-    
+
+
+    //analyse_results(500);   
+    compare_two_hands();
     return 0; // indicates successful termination
 } // end main

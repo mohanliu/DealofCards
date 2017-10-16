@@ -23,6 +23,9 @@ using std::distance;
 using std::begin;
 using std::end;
 
+#include<vector>
+using std::vector;
+
 #include "DeckOfCards.h" // DeckOfCards class definition
 
 // DeckOfCards default constructor initializes deck
@@ -96,7 +99,7 @@ void DeckOfCards::deal(int total)
     cout << endl;
 } // end function deal
 
-int * DeckOfCards::fivehand(int s, int f)
+vector<int> DeckOfCards::fivehand(int s, int f)
 {
     // initialize suit array
     static const char *suit[ 4 ] =
@@ -107,7 +110,7 @@ int * DeckOfCards::fivehand(int s, int f)
     { "Deuce", "Three", "Four", "Five", "Six", "Seven",
         "Eight", "Nine", "Ten", "Jack", "Queen", "King" ,"Ace"};
 
-    static int output[ 6 ] = { 0 };
+    vector<int> output = { 0, 0 ,0, 0, 0, 0};
     
     int suitrank[ 4 ] = { 0 }; 
     int facerank[ 13 ] = { 0 }; 
@@ -234,8 +237,36 @@ int * DeckOfCards::fivehand(int s, int f)
 }
 
 
-void compare_2()
+int DeckOfCards::compare_two_fivehand(vector<int> &first, vector<int> &second)
 {
-    //Work on two five hand
+    cout << "1st Hand, level: " << first[0] << endl;
+    for (int i = 0; i < 6; i++ )
+    {
+        cout << setw(3) << first[i]; 
+    }
+    cout << endl;
+
+    cout << "2nd Hand, level: " << second[0] << endl;
+    for (int i = 0; i < 6; i++ )
+    {
+        cout << setw(3) << second[i]; 
+    }
+    cout << endl; 
+
+    for (int j = 0; j < 6; j++)
+    {
+        if (first[j] > second[j])
+        {
+            cout << "First Win" << endl;
+            return 1;
+        }
+        else if (first[j] < second[j])
+        {
+            cout << "Second Win" << endl;
+            return 2;
+        }
+    }
+    cout << "Tie" << endl;
+    return 0;
 }
 
