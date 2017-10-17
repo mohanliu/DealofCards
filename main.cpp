@@ -1,8 +1,9 @@
-#include "DeckOfCards.h" // DeckOfCards class definition
+#include "DeckOfCards.h" // DeckOfCards class definitions
 
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::cin;
 
 #include <iomanip>
 using std::setw;
@@ -19,6 +20,9 @@ using std::vector;
 
 #include<algorithm>
 using std::max_element;
+
+#include <string>
+using std::string;
 
 void analyse_results(int n) //check results for a large number of five-hands
 {
@@ -76,6 +80,7 @@ int dealer_redraw()
     vector<int> old_eval = deckOfCards.evaluate_fivecard_hand(first_five);
     vector<int> new_cards = deckOfCards.deal_redraw_decision(old_eval);
 
+    // Find out the cases the no need to redraw cards
     if ( *max_element(new_cards.begin(), new_cards.end()) == 5 )
         return -1;
 
@@ -111,11 +116,72 @@ void check_dealer_redraw(int n)
 	cout << nn << " out of " << k << ": Redraw helps" << endl;
 }
 
+void computer_vs_player()
+{
+	DeckOfCards deckOfCards; // create DeckOfCards object
+    deckOfCards.shuffle(); // shuffle the cards in the deck
+
+    cout << "=================================" << endl;
+    deckOfCards.deal(16);
+
+    // Dealer's Turn 
+    vector<int> computer_eval;
+    vector<int> first_five = {1, 2, 3, 4, 5};
+    vector<int> old_eval = deckOfCards.evaluate_fivecard_hand(first_five);
+    vector<int> new_cards = deckOfCards.deal_redraw_decision(old_eval);
+
+    // Find out the cases the no need to redraw cards
+    if ( *max_element(new_cards.begin(), new_cards.end()) == 5 )
+        computer_eval = old_eval;
+    else
+    	computer_eval = deckOfCards.evaluate_fivecard_hand(new_cards);
+
+    // Display dealer's final
+    for ( int i = 6; i < 11; i++)
+    	deckOfCards.display_card( computer_eval[ i ] );
+    deckOfCards.show_hand(computer_eval);
+
+    int player_start = *max_element(new_cards.begin(), new_cards.end());
+    vector<int> player_start_five = {player_start + 1, player_start + 2, 
+    	player_start + 3, player_start + 5, player_start + 5};
+    vector<int> player_original = deckOfCards.evaluate_fivecard_hand(player_start_five);
+
+    // Display player's original cards
+    for ( int i = 6; i < 11; i++)
+    	deckOfCards.display_card( computer_eval[ i ] );
+    cout << "Number of cards I want to replace";
+
+	string rawInput;
+
+	vector<int> num;
+	int x;
+	cout << "Enter a number, or numbers separated by a space, between 1 and 1000." << endl;
+	getline(cin, rawInput);
+    for (int i = 0 ; i < str.length() ; i++)
+    {   // Processing your str Array
+    	if (isdigit(str[i]))
+    	{
+        	number *= 10;
+        	number += ((int)str[i] - '0');
+    	}
+    	else 
+    	{
+        arr[index++] = number;
+        number = 0;
+    	}
+	}
+	arr[index] = number;  
+
+
+	cout <<rawInput << endl;
+}
+
 int main()
 {
 	srand(time(0));
     //analyse_results(500);   
     //compare_two_hands();
-    check_dealer_redraw(10000);
+    //check_dealer_redraw(10000);
+    computer_vs_player();
     return 0;
 } // end main

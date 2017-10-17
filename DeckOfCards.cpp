@@ -101,6 +101,22 @@ void DeckOfCards::deal(int total)
     cout << endl;
 } // end function deal
 
+// Display individual card
+void DeckOfCards::display_card(int num)
+{
+    // initialize suit array
+    static const char *suit[ 4 ] =
+    { "Hearts", "Diamonds", "Clubs", "Spades" };
+    
+    // initialize face array
+    static const char *face[ 13 ] =
+    { "Deuce", "Three", "Four", "Five", "Six", "Seven",
+        "Eight", "Nine", "Ten", "Jack", "Queen", "King" ,"Ace"};
+
+    cout << setw( 5 ) << face[ deckface[ num - 1 ] ]
+         << " of " << setw( 8 ) << suit[ decksuit[ num - 1 ] ] << endl;
+}
+
 // Evaluate a five-card hand (given the indices of the five cards)
 vector<int> DeckOfCards::evaluate_fivecard_hand(vector<int> &cards)
 {    
@@ -246,11 +262,11 @@ void DeckOfCards::show_hand(vector<int> &eval)
     {"Plain", "One Pair", "Two Pairs", "Three of kind", "Straight",
     "Flush", "Full House", "Four of kind", "Straight Flush"};
     cout << Level[ eval[ 0 ] ] << endl;
-    for ( int i = 1; i < 11; i++)
-    {
-        cout << setw(4) << eval[i];
-    }
-    cout << endl;
+    // for ( int i = 1; i < 11; i++)
+    // {
+    //     cout << setw(4) << eval[i];
+    // }
+    // cout << endl;
 }
 
 // Compare two five-card hands
@@ -291,22 +307,22 @@ vector<int> DeckOfCards::deal_redraw_decision(vector<int> &eval)
 
     if ( eval[ 0 ] == 3 ) // Three of kind renew the other two
     {
-        cout << "Renew last two cards" << endl;
+        //cout << "Renew last two cards" << endl;
         num_to_redraw = 2;
     }
     else if ( eval[ 0 ] == 2 ) // Two pairs renew the last one
     {
-        cout << "Renew last card" << endl;
+        //cout << "Renew last card" << endl;
         num_to_redraw = 1;
     }
     else if ( eval[ 0 ] == 1 ) // One pair renew the other three
     {   
-        cout << "Renew last three cards" << endl;
+        //cout << "Renew last three cards" << endl;
         num_to_redraw = 3;
     }
     else if ( eval[ 0 ] > 3 ) // Level greater than straight do not redraw
     {   
-        cout << "No need to redraw" << endl;
+        //cout << "No need to redraw" << endl;
         num_to_redraw = 0;
     }
     else // For plain card, consider the possibility to form straight and flush
@@ -321,21 +337,21 @@ vector<int> DeckOfCards::deal_redraw_decision(vector<int> &eval)
         // Check whether four in a row or four out of range five
         if ( eval[ 1 ] - eval[ 4 ] <= 3 )
         {
-            cout << "Renew the 5th and see if there be a straight" << endl;
+            //cout << "Renew the 5th and see if there be a straight" << endl;
             for (int i = 0; i < 4; i++)
                 new_cards.push_back( eval[ 6 + i ] );
             new_cards.push_back( 6 );
         }  
         else if ( eval[ 2 ] - eval[ 5 ] <= 3 )
         {
-            cout << "Renew the 1st and see if there be a straight" << endl;
+            //cout << "Renew the 1st and see if there be a straight" << endl;
             for (int i = 1; i < 5; i++)
                 new_cards.push_back( eval[ 6 + i ] );
             new_cards.push_back( 6 );
         }    
         else if ( eval[ 1 ] == 14 && eval[ 3 ] <= 5 )
         {
-            cout << "Renew the 2nd and see if there be a straight" << endl;
+            //cout << "Renew the 2nd and see if there be a straight" << endl;
             for (int i = 2; i < 5; i++)
                 new_cards.push_back( eval[ 6 + i ] );
             new_cards.push_back( eval[ 6 ]);
@@ -345,7 +361,7 @@ vector<int> DeckOfCards::deal_redraw_decision(vector<int> &eval)
         // THEN check four of the same suit, try to get a flush
         else if ( p != end(suit_vec) )
         {  
-            cout << "Renew one card (see if there is a flush)" << endl;
+            //cout << "Renew one card (see if there is a flush)" << endl;
             int c = p - begin(suit_vec);
             for ( int k = 0; k < 5; k++)
             {

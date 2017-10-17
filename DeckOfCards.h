@@ -1,7 +1,6 @@
 #include<vector>
 using std::vector;
 
-
 // DeckOfCards class definition
 class DeckOfCards
 {
@@ -9,6 +8,7 @@ public:
     DeckOfCards(); // constructor initializes deck
     void shuffle(); // shuffles cards in deck
     void deal(int); // deals cards in deck
+    void display_card(int );
     vector<int> evaluate_fivecard_hand(vector<int> &);
     void show_hand(vector<int> &);
     int compare_two_hands(vector<int>&, vector<int>&);
