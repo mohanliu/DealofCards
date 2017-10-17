@@ -285,7 +285,7 @@ vector<int> DeckOfCards::deal_redraw_decision(vector<int> &eval)
     // Plain 2 (Five in a row except a middle one): redraw the other one
     // Plain 3 (Four with same suit): redraw the rest 
     // Plain 4 (Very basic): redraw the smallest three
-    
+
     vector<int> new_cards;
     int num_to_redraw = -1;
 
@@ -344,8 +344,7 @@ vector<int> DeckOfCards::deal_redraw_decision(vector<int> &eval)
 
         // THEN check four of the same suit, try to get a flush
         else if ( p != end(suit_vec) )
-        {
-            
+        {  
             cout << "Renew one card (see if there is a flush)" << endl;
             int c = p - begin(suit_vec);
             for ( int k = 0; k < 5; k++)
