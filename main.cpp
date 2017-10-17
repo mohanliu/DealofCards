@@ -25,7 +25,8 @@ void analyse_results(int n) //check results for a large number of five-hands
     {
         DeckOfCards deckOfCards; // create DeckOfCards object
         deckOfCards.shuffle(); // shuffle the cards in the deck
-        vector<int> p = deckOfCards.fivehand(1, 5);
+        vector<int> first_five = {1, 2, 3, 4, 5};
+        vector<int> p = deckOfCards.evaluate_fivecard_hand(first_five);
         count[p[0]]++;
         if ( p[0] > 7)
             deckOfCards.deal(5);
@@ -42,35 +43,67 @@ void compare_two_hands()
 	DeckOfCards deckOfCards; // create DeckOfCards object
     deckOfCards.shuffle(); // shuffle the cards in the deck
     deckOfCards.deal(10);
-    vector<int> p1 = deckOfCards.fivehand(1, 5);
-    vector<int> p2 = deckOfCards.fivehand(6, 10);
-    int r = deckOfCards.compare_two_fivehand(p1, p2);
+    vector<int> first_five = {1, 2, 3, 4, 5};
+    vector<int> second_five = {6, 7, 8, 9, 10};
+    vector<int> p1 = deckOfCards.evaluate_fivecard_hand(first_five);
+    vector<int> p2 = deckOfCards.evaluate_fivecard_hand(second_five);
+
+   	deckOfCards.show_hand(p1);
+   	deckOfCards.show_hand(p2);
+
+   	cout << endl;
+
+    int r = deckOfCards.compare_two_hands(p1, p2);
+    if ( r == 1 )
+    	cout << "First Win" << endl;
+    else if ( r == 2 )
+    	cout << "Second Win" << endl;
+    else if ( r == 0 )
+    	cout << "Tie" << endl;
+}
+
+int dealer_redraw()
+{
+	DeckOfCards deckOfCards; // create DeckOfCards object
+    deckOfCards.shuffle(); // shuffle the cards in the deck
+    deckOfCards.deal(8);
+    vector<int> first_five = {1, 2, 3, 4, 5};
+    vector<int> old_eval = deckOfCards.evaluate_fivecard_hand(first_five);
+    vector<int> new_cards = deckOfCards.deal_redraw_decision(old_eval);
+    vector<int> new_eval = deckOfCards.evaluate_fivecard_hand(new_cards);
+
+   	deckOfCards.show_hand(old_eval);
+   	deckOfCards.show_hand(new_eval);
+   	cout << endl;
+   	
+    int r = deckOfCards.compare_two_hands(old_eval,new_eval);
+    if ( r == 1 )
+    	cout << "Original is better" << endl;
+    else if ( r == 2 )
+    	cout << "Redraw helps" << endl;
+    else if ( r == 0 )
+    	cout << "Make no differences" << endl;
+
+    return r;
+}
+
+void check_dealer_redraw(int n)
+{
+	int nn = 0;
+	for (int i = 0; i < n; i++)
+	{
+		int v = dealer_redraw();
+		if ( v == 2 )
+			nn++;
+	}
+	cout << nn << " out of " << n << ": Redraw helps" << endl;
 }
 
 int main()
 {
-		srand(time(0));
-
-    //deckOfCards.deal(); // deal the cards in the deck
-
-//    DeckOfCards deckOfCards; // create DeckOfCards object
-//    deckOfCards.shuffle(); // shuffle the cards in the deck
-//    deckOfCards.deal();
-//    cout << "*****************************" << endl;
-//
-//    int * p = deckOfCards.fivehand(1, 5);
-//    for ( int i = 0; i < 6; i++)
-//        cout << setw(5) << p[i] ;
-//    cout << endl;
-//    cout << "*****************************" << endl;
-//
-//    int * q = deckOfCards.fivehand(6, 10);
-//    for ( int i = 0; i < 6; i++)
-//        cout << setw(5) << q[i] ;
-//    cout << endl;
-
-
+	srand(time(0));
     //analyse_results(500);   
-    compare_two_hands();
-    return 0; // indicates successful termination
+    //compare_two_hands();
+    check_dealer_redraw(1000);
+    return 0;
 } // end main
