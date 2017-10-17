@@ -17,6 +17,9 @@ using std::time;
 #include<vector>
 using std::vector;
 
+#include<algorithm>
+using std::max_element;
+
 void analyse_results(int n) //check results for a large number of five-hands
 {
     int count[9] = {0};
@@ -66,10 +69,16 @@ int dealer_redraw()
 {
 	DeckOfCards deckOfCards; // create DeckOfCards object
     deckOfCards.shuffle(); // shuffle the cards in the deck
+
+    cout << "=================================" << endl;
     deckOfCards.deal(8);
     vector<int> first_five = {1, 2, 3, 4, 5};
     vector<int> old_eval = deckOfCards.evaluate_fivecard_hand(first_five);
     vector<int> new_cards = deckOfCards.deal_redraw_decision(old_eval);
+
+    if ( *max_element(new_cards.begin(), new_cards.end()) == 5 )
+        return -1;
+
     vector<int> new_eval = deckOfCards.evaluate_fivecard_hand(new_cards);
 
    	deckOfCards.show_hand(old_eval);
@@ -83,20 +92,23 @@ int dealer_redraw()
     	cout << "Redraw helps" << endl;
     else if ( r == 0 )
     	cout << "Make no differences" << endl;
-
+    
     return r;
 }
 
 void check_dealer_redraw(int n)
 {
 	int nn = 0;
+    int k = n;
 	for (int i = 0; i < n; i++)
 	{
 		int v = dealer_redraw();
 		if ( v == 2 )
 			nn++;
+        if ( v == -1 )
+            k--;
 	}
-	cout << nn << " out of " << n << ": Redraw helps" << endl;
+	cout << nn << " out of " << k << ": Redraw helps" << endl;
 }
 
 int main()
@@ -104,6 +116,6 @@ int main()
 	srand(time(0));
     //analyse_results(500);   
     //compare_two_hands();
-    check_dealer_redraw(1000);
+    check_dealer_redraw(10000);
     return 0;
 } // end main

@@ -276,53 +276,99 @@ int DeckOfCards::compare_two_hands(vector<int> &eval1, vector<int> &eval2)
 // Dealer should decide whether or not to redraw one, two, three cards
 vector<int> DeckOfCards::deal_redraw_decision(vector<int> &eval)
 {
+    // Rules:
+    // If better than a Straight, then no need to redraw
+    // Three of kind: redraw the other two
+    // Two pairs: redraw the single one
+    // One pair: redraw the unpaired three
+    // Plain 1 (Four in a row): redraw the other one
+    // Plain 2 (Five in a row except a middle one): redraw the other one
+    // Plain 3 (Four with same suit): redraw the rest 
+    // Plain 4 (Very basic): redraw the smallest three
+    
     vector<int> new_cards;
     int num_to_redraw = -1;
 
-    if ( eval[ 0 ] == 3 )
+    if ( eval[ 0 ] == 3 ) // Three of kind renew the other two
     {
         cout << "Renew last two cards" << endl;
         num_to_redraw = 2;
-        for (int i = 0; i < 3; i++)
-            new_cards.push_back(eval[6+i]);
-        for (int j = 0; j < 2; j++)
-            new_cards.push_back(6 + j);
     }
-    else if ( eval[ 0 ] == 2 )
+    else if ( eval[ 0 ] == 2 ) // Two pairs renew the last one
     {
         cout << "Renew last card" << endl;
         num_to_redraw = 1;
-        for (int i = 0; i < 4; i++)
-            new_cards.push_back(eval[6+i]);
-        for (int j = 0; j < 1; j++)
-            new_cards.push_back(6 + j);
     }
-    else if ( eval[ 0 ] == 1 )
+    else if ( eval[ 0 ] == 1 ) // One pair renew the other three
     {   
-
         cout << "Renew last three cards" << endl;
         num_to_redraw = 3;
-        for (int i = 0; i < 2; i++)
-            new_cards.push_back(eval[6+i]);
-        for (int j = 0; j < 3; j++)
-            new_cards.push_back(6 + j);
     }
-    else if ( eval[ 0 ] > 3 )
+    else if ( eval[ 0 ] > 3 ) // Level greater than straight do not redraw
     {   
         cout << "No need to redraw" << endl;
         num_to_redraw = 0;
     }
-    else
+    else // For plain card, consider the possibility to form straight and flush
     {
-        num_to_redraw = 0;
+        int suit_vec[ 4 ] = { 0 };
+
+        for (int n = 6; n < 11; n++)
+            suit_vec[ decksuit[ eval[ n ] - 1] ] += 1;
+
+        int * p = find(suit_vec, end(suit_vec), 4);
+
+        // Check whether four in a row or four out of range five
+        if ( eval[ 1 ] - eval[ 4 ] <= 3 )
+        {
+            cout << "Renew the 5th and see if there be a straight" << endl;
+            for (int i = 0; i < 4; i++)
+                new_cards.push_back( eval[ 6 + i ] );
+            new_cards.push_back( 6 );
+        }  
+        else if ( eval[ 2 ] - eval[ 5 ] <= 3 )
+        {
+            cout << "Renew the 1st and see if there be a straight" << endl;
+            for (int i = 1; i < 5; i++)
+                new_cards.push_back( eval[ 6 + i ] );
+            new_cards.push_back( 6 );
+        }    
+        else if ( eval[ 1 ] == 14 && eval[ 3 ] <= 5 )
+        {
+            cout << "Renew the 2nd and see if there be a straight" << endl;
+            for (int i = 2; i < 5; i++)
+                new_cards.push_back( eval[ 6 + i ] );
+            new_cards.push_back( eval[ 6 ]);
+            new_cards.push_back( 6 );
+        }   
+
+        // THEN check four of the same suit, try to get a flush
+        else if ( p != end(suit_vec) )
+        {
+            
+            cout << "Renew one card (see if there is a flush)" << endl;
+            int c = p - begin(suit_vec);
+            for ( int k = 0; k < 5; k++)
+            {
+                if ( decksuit[ k ] != c )
+                    new_cards.push_back( 6 );
+                else
+                    new_cards.push_back( k + 1 );
+            }
+            return new_cards;
+        }
+        else
+        {
+            num_to_redraw = 3;
+        }
     }
 
     if ( num_to_redraw != -1 )
     {
         for (int i = 0; i < 5 - num_to_redraw; i++)
-            new_cards.push_back(eval[6+i]);
+            new_cards.push_back( eval[ 6 + i ] );
         for (int j = 0; j < num_to_redraw; j++)
-            new_cards.push_back(6 + j);            
+            new_cards.push_back( 6 + j );            
     }
 
     return new_cards;
