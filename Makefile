@@ -3,7 +3,7 @@ CFLAGS=-c -Wall -std=c++11
 LDFLAGS=
 SOURCES=main.cpp DeckOfCards.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=output
+EXECUTABLE=play
 
 all: $(SOURCES) $(EXECUTABLE)
 	

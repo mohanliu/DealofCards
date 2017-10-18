@@ -125,9 +125,6 @@ void computer_vs_player()
 	DeckOfCards deckOfCards; // create DeckOfCards object
     deckOfCards.shuffle(); // shuffle the cards in the deck
 
-    cout << "=================================" << endl;
-    deckOfCards.deal(16);
-
     // Dealer's Turn 
     vector<int> computer_eval;
     vector<int> first_five = {1, 2, 3, 4, 5};
@@ -140,54 +137,116 @@ void computer_vs_player()
     else
     	computer_eval = deckOfCards.evaluate_fivecard_hand(new_cards);
 
-    // Display dealer's final
-    for ( int i = 6; i < 11; i++)
-    	deckOfCards.display_card( computer_eval[ i ] );
-    deckOfCards.show_hand(computer_eval);
 
+
+    // Player's Turn
     int player_start = *max_element(new_cards.begin(), new_cards.begin() + 5 );
     vector<int> player_cards = {player_start + 1, player_start + 2, 
     	player_start + 3, player_start + 4, player_start + 5};
     vector<int> player_original = deckOfCards.evaluate_fivecard_hand(player_cards);
 
     // Display player's original cards
+    cout << "Here is your card: " << endl;
     for ( int i = 6; i < 11; i++)
     	deckOfCards.display_card( player_original[ i ] );
-    cout << "Number of cards I want to replace" << endl;
 
     // Players decide the card numbers to redraw
 	string rawInput;
 	vector<int> to_remove;
-	cout << "Enter a number, or numbers separated by a space, between 1 and 1000." << endl;
-	getline(cin, rawInput);
-    stringstream stream(rawInput);
+	int flag;
+	int c;
+	cout << "Number of cards you want to replace (no more than 3 cards)" << endl;
+	do
+	{
+		getline(cin, rawInput);
+    	stringstream stream(rawInput);
+    	c = 0;
+    	flag = 0;
 
-    while(1) { // Convert input values to a vector to_remove
-        int n;
-        stream >> n;
-        if(!stream)
-            break;
-        to_remove.push_back(n);
-    }
+    	while(1) { // Convert input values to a vector to_remove
+        	int n;
+       		stream >> n;
+       		if(!stream)
+            	break;
 
+       		if ( n > player_start + 5 || n < player_start + 1 )
+       		{
+       			cout << "Wrong numbers. Please enter again: ";
+       			flag = 1;
+       			break;
+       		}
+       		if ( c > 3 )
+       		{
+       			cout << "Too many cards. Please enter less: ";
+       			flag = 1;
+       			break;
+       		}
+
+        	to_remove.push_back(n);
+        	c++;
+    	}
+    } while ( flag == 1 );
+
+    // Player redraw the cards
     for (int i = 0; i < to_remove.size(); i++)
     {
-        int v = to_remove[i];
+        int v = to_remove[ i ];
         player_cards.erase( 
                     remove( player_cards.begin(), player_cards.end(), v ), 
                     player_cards.end() );
         player_cards.push_back( player_start + 6 + i );
     } 
 
-    for (int j = 0; j < player_cards.size(); j++)
-        cout << player_cards[j] << endl;
+    // Player's final cards
+    vector<int> player_final = deckOfCards.evaluate_fivecard_hand(player_cards);
+
+    // Show results
+    int r = deckOfCards.compare_two_hands(player_final,computer_eval);
+    cout << endl;
+    if ( r == 1 )
+    {
+    	cout << "=========================" << endl;
+    	cout << "You win! Congratulations." << endl;
+    	cout << "=========================" << endl;
+    }
+    else if ( r == 2 )
+    {
+    	cout << "=============================" << endl;
+    	cout << "Computer wins. Try next time." << endl;
+    	cout << "=============================" << endl;
+	}
+    else if ( r == 0 )
+    {
+    	cout << "===========" << endl;
+    	cout << "It's a tie." << endl;
+    	cout << "===========" << endl;
+	}
+
+    // Display Infomation
+    cout << endl;
+    cout << "Computer final hand: " << endl;  
+    deckOfCards.show_hand( computer_eval );      
+    for ( int i = 6; i < 11; i++) 
+    	// Display dealer's final
+    	deckOfCards.display_card( computer_eval[ i ] );
+    cout << endl;
+
+    cout << "Your final hand" << endl;
+    deckOfCards.show_hand( player_final );
+    for ( int i = 6; i < 11; i++)
+    	// Display player's final
+    	deckOfCards.display_card( player_final[ i ] );
+
+    cout << endl;
+    deckOfCards.deal(16);
+
 
 }
 
 int main()
 {
-	srand(time(0));
-    //analyse_results(500);   
+    srand(time(0));
+    //analyse_results(500000);   
     //compare_two_hands();
     //check_dealer_redraw(10000);
     computer_vs_player();

@@ -79,6 +79,7 @@ void DeckOfCards::deal(int total)
     { "Deuce", "Three", "Four", "Five", "Six", "Seven",
         "Eight", "Nine", "Ten", "Jack", "Queen", "King" ,"Ace"};
     
+    cout << "Let's Deal cards: " << endl;
     // for each of the 52 cards
     for ( int card = 1; card <= total; card++ )
     {
@@ -91,9 +92,12 @@ void DeckOfCards::deal(int total)
                 // if slot contains current card, display card
                 if ( deck[ row ][ column ] == card )
                 {
-                    cout << setw( 5 ) << right << face[ column ]
-                    << " of " << setw( 8 ) << left << suit[ row ]
-                    << ( card % 2 == 0 ? '\n' : '\t' );
+                    // cout << setw( 5 ) << right << face[ column ]
+                    // << " of " << setw( 8 ) << left << suit[ row ]
+                    // << ( card % 2 == 0 ? '\n' : '\t' );
+                    cout << setw( 2 ) << left << card <<  " : " 
+                    << setw( 8 ) << right << face[ column ] << " of " 
+                    << setw( 8 ) << left << suit[ row ] << endl;
                 } // end if
             } // end innermost for
         } // end inner for
@@ -135,6 +139,7 @@ vector<int> DeckOfCards::evaluate_fivecard_hand(vector<int> &cards)
     int facerank[ 13 ] = { 0 }; 
     int row;
     int column;
+    vector<int> temp_cards = cards; // Deepcopy of the input 
 
     // Collect the faces and suits of these five cards
     for ( int n = 0; n < 5; n++)
@@ -170,10 +175,10 @@ vector<int> DeckOfCards::evaluate_fivecard_hand(vector<int> &cards)
     {
         for ( int k = 0; k < 6 - f; k++)
         {
-            if ( output[ f ] == deckface[ cards[ k ] - 1 ] + 2 )
+            if ( output[ f ] == deckface[ temp_cards[ k ] - 1 ] + 2 )
             {
-                output[ f + 5 ] = cards[ k ];
-                cards.erase(cards.begin()+k);
+                output[ f + 5 ] = temp_cards[ k ];
+                temp_cards.erase(temp_cards.begin()+k);
                 break;
             }
         }
@@ -206,7 +211,7 @@ vector<int> DeckOfCards::evaluate_fivecard_hand(vector<int> &cards)
             break;
     }
 
-    // Straight or plain or Flush straight or Flush
+    // Straight or High card or Flush straight or Flush
     if ( flag != 0 )
         return output;
     else
@@ -251,7 +256,7 @@ vector<int> DeckOfCards::evaluate_fivecard_hand(vector<int> &cards)
         else
         {
             output[ 0 ] = 0;
-            //cout << "Plain" << endl;
+            //cout << "High card" << endl;
         }
         return output;
     }
@@ -260,14 +265,14 @@ vector<int> DeckOfCards::evaluate_fivecard_hand(vector<int> &cards)
 void DeckOfCards::show_hand(vector<int> &eval)
 {
     const static char *Level[9] = 
-    {"Plain", "One Pair", "Two Pairs", "Three of kind", "Straight",
+    {"High card", "One Pair", "Two Pairs", "Three of kind", "Straight",
     "Flush", "Full House", "Four of kind", "Straight Flush"};
     cout << Level[ eval[ 0 ] ] << endl;
-    for ( int i = 1; i < 11; i++)
-    {
-        cout << setw(4) << eval[i];
-    }
-    cout << endl;
+    // for ( int i = 1; i < 11; i++)
+    // {
+    //     cout << setw(4) << eval[i];
+    // }
+    // cout << endl;
 }
 
 // Compare two five-card hands
@@ -298,10 +303,10 @@ vector<int> DeckOfCards::deal_redraw_decision(vector<int> &eval)
     // Three of kind: redraw the other two
     // Two pairs: redraw the single one
     // One pair: redraw the unpaired three
-    // Plain 1 (Four in a row): redraw the other one
-    // Plain 2 (Five in a row except a middle one): redraw the other one
-    // Plain 3 (Four with same suit): redraw the rest 
-    // Plain 4 (Very basic): redraw the smallest three
+    // High card 1 (Four in a row): redraw the other one
+    // High card 2 (Five in a row except a middle one): redraw the other one
+    // High card 3 (Four with same suit): redraw the rest 
+    // High card 4 (Very basic): redraw the smallest three
 
     vector<int> new_cards;
     int num_to_redraw = -1;
@@ -326,7 +331,7 @@ vector<int> DeckOfCards::deal_redraw_decision(vector<int> &eval)
         //cout << "No need to redraw" << endl;
         num_to_redraw = 0;
     }
-    else // For plain card, consider the possibility to form straight and flush
+    else // For High card card, consider the possibility to form straight and flush
     {
         int suit_vec[ 4 ] = { 0 };
 
