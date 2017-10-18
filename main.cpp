@@ -20,9 +20,13 @@ using std::vector;
 
 #include<algorithm>
 using std::max_element;
+using std::remove;
 
 #include <string>
 using std::string;
+
+#include <sstream>
+using std::stringstream;
 
 void analyse_results(int n) //check results for a large number of five-hands
 {
@@ -141,39 +145,43 @@ void computer_vs_player()
     	deckOfCards.display_card( computer_eval[ i ] );
     deckOfCards.show_hand(computer_eval);
 
-    int player_start = *max_element(new_cards.begin(), new_cards.end());
-    vector<int> player_start_five = {player_start + 1, player_start + 2, 
-    	player_start + 3, player_start + 5, player_start + 5};
-    vector<int> player_original = deckOfCards.evaluate_fivecard_hand(player_start_five);
+    int player_start = *max_element(new_cards.begin(), new_cards.begin() + 5 );
+    vector<int> player_cards = {player_start + 1, player_start + 2, 
+    	player_start + 3, player_start + 4, player_start + 5};
+    vector<int> player_original = deckOfCards.evaluate_fivecard_hand(player_cards);
 
     // Display player's original cards
     for ( int i = 6; i < 11; i++)
-    	deckOfCards.display_card( computer_eval[ i ] );
-    cout << "Number of cards I want to replace";
+    	deckOfCards.display_card( player_original[ i ] );
+    cout << "Number of cards I want to replace" << endl;
 
+    // Players decide the card numbers to redraw
 	string rawInput;
-
-	vector<int> num;
-	int x;
+	vector<int> to_remove;
 	cout << "Enter a number, or numbers separated by a space, between 1 and 1000." << endl;
 	getline(cin, rawInput);
-    for (int i = 0 ; i < str.length() ; i++)
-    {   // Processing your str Array
-    	if (isdigit(str[i]))
-    	{
-        	number *= 10;
-        	number += ((int)str[i] - '0');
-    	}
-    	else 
-    	{
-        arr[index++] = number;
-        number = 0;
-    	}
-	}
-	arr[index] = number;  
+    stringstream stream(rawInput);
 
+    while(1) { // Convert input values to a vector to_remove
+        int n;
+        stream >> n;
+        if(!stream)
+            break;
+        to_remove.push_back(n);
+    }
 
-	cout <<rawInput << endl;
+    for (int i = 0; i < to_remove.size(); i++)
+    {
+        int v = to_remove[i];
+        player_cards.erase( 
+                    remove( player_cards.begin(), player_cards.end(), v ), 
+                    player_cards.end() );
+        player_cards.push_back( player_start + 6 + i );
+    } 
+
+    for (int j = 0; j < player_cards.size(); j++)
+        cout << player_cards[j] << endl;
+
 }
 
 int main()

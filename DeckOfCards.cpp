@@ -114,7 +114,8 @@ void DeckOfCards::display_card(int num)
         "Eight", "Nine", "Ten", "Jack", "Queen", "King" ,"Ace"};
 
     cout << setw( 5 ) << face[ deckface[ num - 1 ] ]
-         << " of " << setw( 8 ) << suit[ decksuit[ num - 1 ] ] << endl;
+         << " of " << setw( 8 ) << suit[ decksuit[ num - 1 ] ] << " ( "
+         << num << " ) "<< endl;
 }
 
 // Evaluate a five-card hand (given the indices of the five cards)
@@ -262,11 +263,11 @@ void DeckOfCards::show_hand(vector<int> &eval)
     {"Plain", "One Pair", "Two Pairs", "Three of kind", "Straight",
     "Flush", "Full House", "Four of kind", "Straight Flush"};
     cout << Level[ eval[ 0 ] ] << endl;
-    // for ( int i = 1; i < 11; i++)
-    // {
-    //     cout << setw(4) << eval[i];
-    // }
-    // cout << endl;
+    for ( int i = 1; i < 11; i++)
+    {
+        cout << setw(4) << eval[i];
+    }
+    cout << endl;
 }
 
 // Compare two five-card hands
